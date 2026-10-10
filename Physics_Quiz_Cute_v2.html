@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Quiz — Units, Dimensions & Dimensional Analysis</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    right: -15%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -25%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card {
+    background: #1e293b;
+    border-radius: 20px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(148, 163, 184, 0.1);
+    padding: 48px;
+    max-width: 760px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quiz-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .quiz-header .icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3);
+  }
+
+  .quiz-header .icon-circle i {
+    font-size: 1.6rem;
+    color: white;
+  }
+
+  .quiz-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #f1f5f9;
+    letter-spacing: -0.5px;
+  }
+
+  .quiz-header .subtitle {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-top: 6px;
+  }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    color: #7dd3fc;
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge i { font-size: 0.75rem; }
+
+  .progress-container {
+    margin: 24px 0;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-info span:last-child { color: #38bdf8; }
+
+  .progress-bar {
+    height: 6px;
+    background: #334155;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .question-box {
+    background: #0f172a;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    border: 1px solid #334155;
+  }
+
+  .question-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56, 189, 248, 0.12);
+    color: #38bdf8;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  .equation-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    color: #a5b4fc;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .equation-tag i { font-size: 0.75rem; }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .option-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 500;
+    padding: 14px 18px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background: #1e293b;
+    color: #cbd5e1;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: #263548;
+    border-color: #475569;
+    transform: translateX(4px);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    background: #334155;
+    color: #94a3b8;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn.correct {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: #22c55e;
+    color: #86efac;
+  }
+
+  .option-btn.correct .option-letter {
+    background: #22c55e;
+    color: white;
+  }
+
+  .option-btn.wrong {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #fca5a5;
+    animation: shake 0.4s ease;
+  }
+
+  .option-btn.wrong .option-letter {
+    background: #ef4444;
+    color: white;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+    font-size: 0.92rem;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .feedback.show { display: flex; animation: fadeIn 0.3s ease; }
+
+  .feedback.correct-fb {
+    background: rgba(34, 197, 94, 0.1);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .feedback.wrong-fb {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .next-btn {
+    display: none;
+    margin: 20px auto 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .next-btn:hover { transform: scale(1.04); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35); }
+  .next-btn.show { display: inline-flex; animation: fadeIn 0.3s ease; }
+
+  .start-screen, .result-screen { text-align: center; }
+
+  .start-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    box-shadow: 0 12px 32px rgba(56, 189, 248, 0.3);
+  }
+
+  .start-icon i { font-size: 2rem; color: white; }
+
+  .name-input {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 14px 20px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    text-align: center;
+    color: #e2e8f0;
+    width: 100%;
+    max-width: 320px;
+    margin: 20px 0;
+    outline: none;
+    background: #0f172a;
+    transition: border 0.2s ease;
+  }
+
+  .name-input::placeholder { color: #64748b; }
+  .name-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+
+  .start-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 44px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .start-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4); }
+
+  .score-ring {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    animation: pop-in 0.5s ease;
+  }
+
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+  }
+
+  @keyframes pop-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .score-ring .score-num { font-size: 2.8rem; font-weight: 800; line-height: 1; }
+  .score-ring .score-label { font-size: 0.85rem; font-weight: 500; margin-top: 4px; opacity: 0.85; }
+
+  .grade-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 10px 28px;
+    border-radius: 10px;
+    color: white;
+    margin: 14px 0;
+    animation: pop-in 0.6s ease;
+  }
+
+  .result-msg {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin: 12px 0 24px;
+    line-height: 1.6;
+  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 18px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-item .stat-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #e2e8f0;
+  }
+
+  .stat-item .stat-lbl {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .retry-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 12px 32px;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .retry-btn:hover { border-color: #475569; color: #e2e8f0; background: #263548; }
+
+  .hidden { display: none !important; }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    z-index: 999;
+    pointer-events: none;
+    animation: confetti-fall linear forwards;
+  }
+
+  @keyframes confetti-fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0.5; }
+  }
+
+  @media (max-width: 600px) {
+    .card { padding: 28px 20px; }
+    .quiz-header h1 { font-size: 1.5rem; }
+    .question-text { font-size: 0.98rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div id="startScreen" class="start-screen">
+    <div class="start-icon"><i class="fas fa-atom"></i></div>
+    <h1 style="font-family:'Playfair Display',serif; color:#f1f5f9; font-size:1.9rem;">Physics Quiz</h1>
+    <p style="color:#94a3b8; font-weight:500; margin-top:6px;">Units, Dimensions &amp; Dimensional Analysis</p>
+    <div class="badge-row">
+      <span class="badge"><i class="fas fa-list-check"></i> 50 Questions</span>
+      <span class="badge"><i class="fas fa-check-circle"></i> MCQs</span>
+      <span class="badge"><i class="fas fa-scale-balanced"></i> L.H.S. = R.H.S.</span>
+    </div>
+    <p style="color:#64748b; font-weight:500; margin-top:22px; font-size:0.92rem;">Enter your name to begin</p>
+    <input type="text" id="nameInput" class="name-input" placeholder="Your name" maxlength="30">
+    <br>
+    <button class="start-btn" onclick="startQuiz()"><i class="fas fa-play"></i> Start Quiz</button>
+  </div>
+
+  <div id="quizScreen" class="hidden">
+    <div class="quiz-header">
+      <div class="icon-circle"><i class="fas fa-atom"></i></div>
+      <h1>Physics Quiz</h1>
+      <p class="subtitle">Units &amp; Dimensions</p>
+    </div>
+    <div class="progress-container">
+      <div class="progress-info">
+        <span id="progressText">Question 1 / 50</span>
+        <span id="scoreText">Score: 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="question-box">
+      <span class="question-num"><i class="fas fa-hashtag"></i> <span id="qNum">Q1</span></span>
+      <div class="question-text" id="qText"></div>
+      <div id="qEquation"></div>
+    </div>
+    <div class="options" id="optionsBox"></div>
+    <div class="feedback" id="feedback"></div>
+    <div style="text-align:center;">
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()"><span id="nextBtnText">Next</span> <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="result-screen hidden">
+    <div class="start-icon" id="resultIconBox"><i class="fas fa-trophy" id="resultIcon"></i></div>
+    <h1 style="font-family:'Playfair Display',serif; color:#f1f5f9; font-size:1.7rem;" id="resultTitle">Quiz Complete</h1>
+    <p style="color:#64748b; font-weight:500;" id="resultName"></p>
+    <div class="score-ring" id="scoreCircle">
+      <span class="score-num" id="scoreNum"></span>
+      <span class="score-label">out of 50</span>
+    </div>
+    <div class="result-stats">
+      <div class="stat-item">
+        <div class="stat-val" id="statCorrect" style="color:#22c55e;"></div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="statWrong" style="color:#ef4444;"></div>
+        <div class="stat-lbl">Incorrect</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="statPct" style="color:#38bdf8;"></div>
+        <div class="stat-lbl">Accuracy</div>
+      </div>
+    </div>
+    <div>
+      <span class="grade-badge" id="gradeBadge"><i class="fas fa-award" id="gradeIcon"></i> <span id="gradeText"></span></span>
+    </div>
+    <p class="result-msg" id="resultMsg"></p>
+    <button class="retry-btn" onclick="retryQuiz()"><i class="fas fa-rotate-right"></i> Try Again</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  { q: "Which of the following is classified as a Basic physical quantity in your notes?", options: ["Velocity", "Force", "Mass", "Acceleration"], answer: 2 },
+  { q: "Which of the following is classified as a Derived physical quantity?", options: ["Length", "Time", "Mass", "Area"], answer: 3 },
+  { q: "The standard SI unit for Length as noted in your notebook is:", options: ["kg", "m", "s", "N"], answer: 1 },
+  { q: "What is the fundamental dimension symbol for Mass?", options: ["L", "T", "M", "A"], answer: 2 },
+  { q: "What is the fundamental dimension symbol for Time?", options: ["T", "L", "M", "K"], answer: 0 },
+  { q: "Which symbol represents the dimension of Length?", options: ["M", "T", "L", "V"], answer: 2 },
+  { q: "Which of the following groups contains only basic physical quantities from your notes?", options: ["Mass, Length, Time", "Area, Volume, Speed", "Force, Energy, Mass", "Length, Velocity, Time"], answer: 0 },
+  { q: "Which of the following groups contains only derived quantities?", options: ["Mass, Time", "Area, Volume, Force, Energy, Speed", "Length, Mass", "Time, Speed"], answer: 1 },
+  { q: "What is the dimension of Area (Area = Length × Length)?", options: ["L", "L²", "L³", "LT⁻¹"], answer: 1 },
+  { q: "What is the SI unit of Area derived from its formula?", options: ["m", "m²", "m³", "kg·m"], answer: 1 },
+  { q: "What is the dimension of Volume (Volume = Length × Length × Length)?", options: ["L²", "L³", "ML⁻³", "LT⁻²"], answer: 1 },
+  { q: "The formula for Velocity is Distance / Time. What is its dimensional formula?", options: ["LT⁻¹", "LT⁻²", "MLT⁻²", "L²T⁻¹"], answer: 0 },
+  { q: "What are the standard units of Velocity?", options: ["m·s", "m/s", "kg/m", "m·s⁻²"], answer: 1 },
+  { q: "The formula for Acceleration (a) is Velocity / Time. What is its dimension?", options: ["LT⁻¹", "LT⁻²", "MLT⁻²", "L²T⁻²"], answer: 1 },
+  { q: "What are the units of Acceleration (a)?", options: ["m/s", "m/s²", "kg·m/s", "s/m"], answer: 1 },
+  { q: "Force is defined as Mass × Acceleration. What is the dimensional formula for Force?", options: ["LT⁻²", "MLT⁻¹", "MLT⁻²", "ML²T⁻²"], answer: 2 },
+  { q: "What are the base units equivalent for Force (kg × m/s²)?", options: ["kg·m·s⁻²", "kg·m⁻¹·s⁻²", "kg·m²·s⁻²", "m·s⁻¹"], answer: 0 },
+  { q: "If Density = Mass / Volume, what is the dimensional formula for Density?", options: ["ML⁻³", "ML³", "LT⁻²", "MLT⁻¹"], answer: 0 },
+  { q: "What is the unit of Density in SI units?", options: ["kg·m", "kg/m³", "m³/kg", "N/m²"], answer: 1 },
+  { q: "Work is defined as Force × Distance. What is its dimensional formula?", options: ["MLT⁻²", "ML²T⁻²", "ML²T⁻¹", "LT⁻²"], answer: 1 },
+  { q: "Pressure is defined as Force / Area. What is the dimension of Pressure?", options: ["ML⁻¹T⁻²", "MLT⁻²", "ML²T⁻²", "LT⁻¹"], answer: 0 },
+  { q: "Momentum is defined as Mass × Velocity. What is its dimension?", options: ["MLT⁻²", "MLT⁻¹", "ML²T⁻²", "LT⁻¹"], answer: 1 },
+  { q: "Frequency is defined as 1 / (Time period). What is its dimension?", options: ["T⁻¹", "T", "LT⁻¹", "L"], answer: 0 },
+  { q: "Kinetic Energy is given by ½ mv² (m = mass, v = velocity). What is its dimensional formula?", options: ["MLT⁻²", "ML²T⁻²", "ML²T⁻¹", "MLT⁻¹"], answer: 1 },
+  { q: "Potential Energy is given by mgh (m = mass, g = acceleration due to gravity, h = height). What is its dimension?", options: ["ML²T⁻²", "MLT⁻²", "ML⁻¹T⁻²", "LT⁻²"], answer: 0 },
+  { q: "Torque is given by Force × Distance. Its dimension is the same as:", options: ["Velocity", "Work / Energy", "Power", "Momentum"], answer: 1 },
+  { q: "Power is defined as Work / Time. What is the dimension of Power?", options: ["ML²T⁻³", "ML²T⁻²", "MLT⁻³", "ML⁻²T⁻²"], answer: 0 },
+  { q: "Which of the following pairs of physical quantities has the same dimensional formula?", options: ["Work and Power", "Speed and Acceleration", "Work and Kinetic Energy", "Force and Pressure"], answer: 2 },
+  { q: "If an equation is dimensionally correct, what must be true about L.H.S. and R.H.S.?", options: ["Their numerical values must be equal.", "Their dimensions must be identical.", "Their units must be different.", "Their scalars must match."], answer: 1 },
+  { q: "Which quantity is dimensionless?", options: ["Strain (ΔL / L)", "Velocity", "Acceleration", "Force"], answer: 0 },
+  { q: "What is the dimension of R.H.S. (at)?", eq: "Equation: v = at  •  [a] = LT⁻², [t] = T", options: ["LT⁻¹", "LT⁻²", "L", "T"], answer: 0 },
+  { q: "Is L.H.S. ([s] = L) equal to R.H.S. ([v][t], where [v] = LT⁻¹ and [t] = T)?", eq: "Equation: s = vt", options: ["Yes, dimensionally valid", "No, inconsistent"], answer: 0 },
+  { q: "What is the dimension of the term 2as?", eq: "Equation: v² = u² + 2as  •  (v, u = velocities, a = acceleration, s = distance)", options: ["L²T⁻²", "LT⁻²", "L²T⁻¹", "LT⁻¹"], answer: 0 },
+  { q: "What is the dimension of the term ½ at²?", eq: "Equation: s = ut + ½ at²", options: ["LT⁻¹", "L", "LT⁻²", "L²T⁻²"], answer: 1 },
+  { q: "Does L.H.S. ([F] = MLT⁻²) match R.H.S. ([m][a], where [m] = M and [a] = LT⁻²)?", eq: "Equation: F = ma", options: ["Yes", "No"], answer: 0 },
+  { q: "What is the dimension of R.H.S. (mc²)? ([m] = M, [c] = LT⁻¹)", eq: "Equation: E = mc²  •  (E = energy, m = mass, c = speed of light)", options: ["MLT⁻²", "ML²T⁻²", "ML²T⁻¹", "ML⁻¹T⁻²"], answer: 1 },
+  { q: "What is the dimension of √(l/g)? ([l] = L, [g] = LT⁻²)", eq: "Equation: T = 2π √(l/g)  •  (T = time, l = length, g = acceleration due to gravity)", options: ["T", "T⁻¹", "L", "1 (dimensionless)"], answer: 0 },
+  { q: "What is the dimension of F/m? ([F] = MLT⁻², [m] = ML⁻¹)", eq: "Equation: v = √(F/m)  •  (F = force, m = mass per unit length, i.e. linear mass density)", options: ["L²T⁻²", "LT⁻²", "MLT⁻²", "L²T⁻¹"], answer: 0 },
+  { q: "Check if L.H.S. ([P] = ML²T⁻³) equals R.H.S. ([W]/[t], where [W] = ML²T⁻² and [t] = T). Is it consistent?", eq: "Equation: P = W/t  •  (P = power, W = work, t = time)", options: ["Yes", "No"], answer: 0 },
+  { q: "Is the term gt dimensionally equivalent to velocity v?", eq: "Equation: v = u + gt  •  (v, u = velocities, g = acceleration, t = time)", options: ["Yes", "No"], answer: 0 },
+  { q: "Check dimensional homogeneity for s = vt². L.H.S. = L; R.H.S. = [v][t²], where [v] = LT⁻¹ and [t] = T. Are they equal?", eq: "Equation (Hypothetical): s = vt²", options: ["Yes, consistent", "No, dimensionally inconsistent"], answer: 1 },
+  { q: "What is the dimension of R.H.S. v/t²? ([v] = LT⁻¹, [t²] = T²)", eq: "Equation (Hypothetical): a = v/t²", options: ["LT⁻²", "LT⁻³", "LT⁻¹", "L²T⁻²"], answer: 0 },
+  { q: "Since cosθ is dimensionless, what is the dimension of R.H.S.?", eq: "Equation: W = F·d cosθ", options: ["MLT⁻²", "ML²T⁻²", "LT⁻²", "M²LT⁻²"], answer: 1 },
+  { q: "What is the dimension of frequency f?", eq: "Equation: f = (1/2l) √(F/m)  •  (f = frequency, l = length, F = force, m = mass per unit length)", options: ["T⁻¹", "T", "LT⁻¹", "L⁻¹"], answer: 0 },
+  { q: "Is KE = (1/3) mv³ dimensionally correct compared to the standard ML²T⁻²?", eq: "Equation (Check): KE = (1/3) mv³  •  (Kinetic Energy)", options: ["Yes", "No"], answer: 1 },
+  { q: "Verify if L.H.S. ([p] = MLT⁻¹) equals R.H.S. ([m][v], where [m] = M and [v] = LT⁻¹).", eq: "Equation: p = m·v  •  (Momentum)", options: ["Consistent", "Inconsistent"], answer: 0 },
+  { q: "Verify if [P] = [F]/[A] gives ML⁻¹T⁻².", eq: "Equation: P = F/A  •  (Pressure)", options: ["True", "False"], answer: 0 },
+  { q: "What is the dimension of R.H.S. ([c]/[λ] = LT⁻¹ / L)?", eq: "Equation: ν = c/λ  •  (Frequency; c = speed, λ = wavelength/length)", options: ["T⁻¹", "T", "LT⁻¹", "L⁻¹T⁻¹"], answer: 0 },
+  { q: "What are the dimensions of L.H.S. (v³) and R.H.S. (as)? Is the equation dimensionally consistent?", eq: "Equation (Check): v³ = as", options: ["No, inconsistent", "Yes, consistent"], answer: 0 },
+  { q: "What is the dimensional formula for the Gravitational Constant G? ([G] = [F][r²] / ([m₁][m₂]))", eq: "Equation: F = G m₁ m₂ / r²  •  (Universal Gravitational Law force)", options: ["M⁻¹L³T⁻²", "MLT⁻²", "ML²T⁻²", "M⁻²L²T⁻²"], answer: 0 }
+];
+
+let currentQ = 0;
+let score = 0;
+let playerName = "";
+let answered = false;
+
+function startQuiz() {
+  const nameVal = document.getElementById('nameInput').value.trim();
+  playerName = nameVal || "Student";
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  currentQ = 0;
+  score = 0;
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('qNum').textContent = 'Q' + (currentQ + 1);
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('qEquation').innerHTML = q.eq ? '<span class="equation-tag"><i class="fas fa-square-root-variable"></i> ' + q.eq + '</span>' : '';
+  document.getElementById('progressText').textContent = 'Question ' + (currentQ + 1) + ' / 50';
+  document.getElementById('scoreText').textContent = 'Score: ' + score;
+  document.getElementById('progressFill').style.width = (currentQ / 50 * 100) + '%';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('nextBtn').classList.remove('show');
+
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = '<span class="option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    btn.onclick = () => selectAnswer(i, btn);
+    box.appendChild(btn);
+  });
+}
+
+function selectAnswer(i, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  if (i === q.answer) {
+    btn.classList.add('correct');
+    score++;
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Correct answer.';
+    fb.className = 'feedback show correct-fb';
+  } else {
+    btn.classList.add('wrong');
+    buttons[q.answer].classList.add('correct');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Incorrect. The correct answer is highlighted.';
+    fb.className = 'feedback show wrong-fb';
+  }
+  document.getElementById('scoreText').textContent = 'Score: ' + score;
+  document.getElementById('progressFill').style.width = ((currentQ + 1) / 50 * 100) + '%';
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtnText').textContent = currentQ === 49 ? 'View Results' : 'Next';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 50) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  const pct = score / 50 * 100;
+  const wrong = 50 - score;
+  let grade, color, icon, msg;
+
+  if (pct >= 90) {
+    grade = 'A+'; color = 'linear-gradient(135deg, #f59e0b, #d97706)'; icon = 'fa-trophy';
+    msg = 'Outstanding performance, ' + playerName + '. Your command of Units, Dimensions and Dimensional Analysis is exceptional.';
+  } else if (pct >= 80) {
+    grade = 'A'; color = 'linear-gradient(135deg, #38bdf8, #6366f1)'; icon = 'fa-medal';
+    msg = 'Excellent work, ' + playerName + '. You demonstrate a strong understanding of the material.';
+  } else if (pct >= 70) {
+    grade = 'B'; color = 'linear-gradient(135deg, #38bdf8, #0ea5e9)'; icon = 'fa-thumbs-up';
+    msg = 'Good result, ' + playerName + '. A solid foundation — further practice will push you to the top.';
+  } else if (pct >= 60) {
+    grade = 'C'; color = 'linear-gradient(135deg, #22c55e, #16a34a)'; icon = 'fa-book-open';
+    msg = 'You passed, ' + playerName + '. Review the key concepts and attempt the quiz again to improve.';
+  } else {
+    grade = 'D'; color = 'linear-gradient(135deg, #ef4444, #dc2626)'; icon = 'fa-book';
+    msg = 'Keep going, ' + playerName + '. Review your notes thoroughly and try again — improvement comes with practice.';
+  }
+
+  document.getElementById('resultName').textContent = playerName;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreCircle').style.background = color;
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statPct').textContent = pct.toFixed(0) + '%';
+  document.getElementById('gradeText').textContent = 'Grade: ' + grade;
+  document.getElementById('gradeBadge').style.background = color;
+  document.getElementById('gradeIcon').className = 'fas ' + icon;
+  document.getElementById('resultIcon').className = 'fas ' + icon;
+  document.getElementById('resultMsg').textContent = msg;
+
+  if (pct >= 60) launchConfetti();
+}
+
+function launchConfetti() {
+  const colors = ['#38bdf8', '#6366f1', '#22c55e', '#f59e0b', '#ec4899', '#a78bfa'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 5000);
+    }, i * 50);
+  }
+}
+
+function retryQuiz() {
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('nameInput').value = playerName === 'Student' ? '' : playerName;
+}
+</script>
+</body>
+</html>
